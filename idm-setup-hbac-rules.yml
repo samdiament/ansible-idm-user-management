@@ -1,0 +1,34 @@
+---
+- name: Ensure hbac rules exist and contain proper host groups and user groups
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars_files:
+    - ipa_password.yml
+    - hbac_rules.yml
+
+  vars:
+    ipa_host: ipa_host_name # change this
+    ipa_user: admin
+    ipa_port: 443
+    ipa_protocol: https
+    validate_certs: false
+  
+  tasks:
+    - name: Ensure hbac rules exist and contain proper host groups and user groups
+      loop: "{{ hbac_rules }}"
+      community.general.ipa_hbacrule:
+        name: "{{ item.hbac_rule_name }}" # variable from vars file
+        hostgroup:
+          - "{{ item.hostgroups }}" # variable from vars file
+        service:
+          - "{{ item.services }}" # variable from vars file
+        usergroup:
+          - "{{ item.usergroups }}"
+        ipa_host: "{{ ipa_host }}"
+        ipa_port: "{{ ipa_port }}"
+        ipa_prot: "{{ ipa_protocol }}"
+        ipa_pass: "{{ ipa_password }}"
+        validate_certs: "{{ validate_certs }}"
+        state: present

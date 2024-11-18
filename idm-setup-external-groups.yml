@@ -1,0 +1,30 @@
+---
+- name: Ensure external group exists and contains proper AD groups
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars_files:
+    - .password
+
+  vars:
+    ipa_host: ipa_host_name
+    ipa_user: admin
+    ipa_port: ipa_port
+    ipa_protocol: https
+    validate_certs: false
+  
+  tasks:
+    - name: Ensure group exists and contains external members in idmservers
+      community.general.ipa_group:
+        append: true
+        name: external_group_1
+        external: true
+        external_user:
+          - external_group_1@addomain.com
+        ipa_host: "{{ ipa_host }}"
+        ipa_port: "{{ ipa_port }}"
+        ipa_prot: "{{ ipa_protocol }}"
+        ipa_pass: "{{ ipa_password }}"
+        validate_certs: "{{ validate_certs }}"
+        state: present

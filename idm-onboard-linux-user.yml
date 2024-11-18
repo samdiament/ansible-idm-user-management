@@ -1,0 +1,48 @@
+---
+- name: Ensure external group exists and contains proper AD groups
+  hosts: idmservers
+  become: false
+  gather_facts: false
+
+  vars_files:
+    - password.yml
+
+  tasks:
+    - name: Ensure idm group exists and contains AD users / groups
+      freeipa.ansible_freeipa.ipagroup:
+        ipaadmin_password: "{{ ipaadmin_password }}"
+        name: deleteme_external_ad_group
+        external: true
+        externalmember:
+          - deleteme@WIN.RHVMNETWORK.COM
+        state: present
+
+    - name: Ensure idm group exists and contains external idm group
+      freeipa.ansible_freeipa.ipagroup:
+        ipaadmin_password: "{{ ipaadmin_password }}"
+        name: deleteme_posix_group
+        gid: 1199800118
+        group:
+          - deleteme_external_ad_group
+        state: present
+
+    - name: Ensure hbac rule exists for idm group
+      freeipa.ansible_freeipa.ipahbacrule:
+        ipaadmin_password: "{{ ipaadmin_password }}"
+        name: deleteme_hbac_allow_all
+        group:
+          - deleteme_posix_group
+        servicecategory: all
+        host:
+          - idmclient.demo.rhvmnetwork.com
+        state: present
+
+- name: Test if we can log in with an ad user
+  hosts: idmclients
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Print out a debug message
+      ansible.builtin.debug:
+        msg: "Hello, world!"

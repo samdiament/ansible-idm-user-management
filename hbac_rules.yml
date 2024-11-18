@@ -1,0 +1,21 @@
+hbac_rules:
+  - hbac_rule_name: "name of hbac rule"
+    hostgroups:
+      - "name of host groups"
+      - "another host group or delete this"
+    services:
+      - "name of service"
+      - "another name of a service or delete this"
+    usergroups:
+      - "name of user groups"
+      - "another name of a user group or delete this"
+  - hbac_rule_name: "name of hbac rule"
+    hostgroups:
+      - "name of host groups"
+      - "another host group or delete this"
+    services:
+      - "name of service"
+      - "another name of a service or delete this"
+    usergroups:
+      - "name of user groups"
+      - "another name of a user group or delete this"

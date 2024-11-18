@@ -1,0 +1,15 @@
+localhost ansible_connection=local
+
+[idmservers]
+idmserver
+
+[idmservers:vars]
+ipaserver_domain=demo.rhvmnetwork.com
+ipaserver_realm=DEMO.RHVMNETWORK.com
+
+[idmclients]
+idmclient
+
+[idmclients:vars]
+become_user: dreinbacher@win.rhvmnetwork.com
+become_pass: 'redhat!'
